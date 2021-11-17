@@ -17,9 +17,13 @@ namespace EmployeeCRUDApp.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString = null)
         {
-            var employees = await _context.Employees.ToListAsync();
+            IEnumerable<Employee> employees = await _context.Employees.ToListAsync();
+            if (searchString != null)
+            {
+                employees = employees.Where(emp => emp.Name.ToLower().Contains(searchString.ToLower()));
+            }
             return View(employees);
         }
         public IActionResult Create()
